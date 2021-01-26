@@ -27,16 +27,12 @@ class Net(nn.Module):
         self.conv2 = nn.Conv2d(32, 64, 5)
 
         # Convolutional Layer 3: in_channels = 64, out_channels = 128, kernel_size = 3, stride = 1 (default)
-        # Output Image: 49x49 after pooling 24x24
-        self.conv3 = nn.Conv2d(64, 128, 5)
+        # Output Image: 51x51 after pooling 25x25
+        self.conv3 = nn.Conv2d(64, 128, 3)
         
         # Convolutional Layer 4: in_channels = 128, out_channels = 256, kernel_size = 2, stride = 1 (default)
-        # Output Image: 20x20 after pooling 10x10
-        self.conv4 = nn.Conv2d(128, 256, 5)
-        
-        # Convolutional Layer 5: in_channels = 256, out_channels = 512, kernel_size = 1, stride = 1 (default)
-        # Output Image: 6x6 after pooling 3x3
-        self.conv5 = nn.Conv2d(256, 512, 5)
+        # Output Image: 24x24 after pooling 12x12
+        self.conv4 = nn.Conv2d(128, 256, 2)
         
         ## Note that among the layers to add, consider including:
         # maxpooling layers, multiple conv layers, fully-connected layers, and other layers 
@@ -49,9 +45,8 @@ class Net(nn.Module):
         self.dropout4 = nn.Dropout(p=0.4)
         self.dropout5 = nn.Dropout(p=0.5)
         self.dropout6 = nn.Dropout(p=0.6)
-        self.dropout7 = nn.Dropout(p=0.7)
 
-        self.fc1 = nn.Linear(512*3*3, 1000)
+        self.fc1 = nn.Linear(256*12*12, 1000)
         self.fc2 = nn.Linear(1000, 1000)
         self.fc3 = nn.Linear(1000, 136)
         
@@ -62,10 +57,9 @@ class Net(nn.Module):
         x = self.dropout2(self.pool(F.relu(self.conv2(x))))
         x = self.dropout3(self.pool(F.relu(self.conv3(x))))
         x = self.dropout4(self.pool(F.relu(self.conv4(x))))
-        x = self.dropout5(self.pool(F.relu(self.conv5(x))))
         x = x.view(x.size(0), -1)
-        x = self.dropout6(F.relu(self.fc1(x)))
-        x = self.dropout7(F.relu(self.fc2(x)))
+        x = self.dropout5(F.relu(self.fc1(x)))
+        x = self.dropout6(F.relu(self.fc2(x)))
         x = self.fc3(x)
         
         # a modified x, having gone through all the layers of your model, should be returned
